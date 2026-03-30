@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SirTros Minihry | Minecraft server</title>
+
+<link rel="icon" type="image/png" href="assets/images/logo.png">
+
+<style>
+:root {
+    --primary: #00d2ff;
+    --bg: #0f0f13;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text: #ffffff;
+    --nav-bg: rgba(0, 0, 0, 0.95);
+}
+
+body {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) rgba(255,255,255,0.1);
+}
+
+body::-webkit-scrollbar { width: 10px; }
+body::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+body::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 10px; border: 2px solid rgba(255,255,255,0.05); }
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; scroll-behavior: smooth; }
+body { background-color: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+.bg-glow {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at 50% 50%, #1a1a2e 0%, #0f0f13 100%);
+    z-index: -1;
+}
+
+header, section { scroll-margin-top: 100px; }
+
+nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 10%; background: var(--nav-bg);
+    backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 100px;
+}
+
+.nav-brand { display: flex; align-items: center; gap: 20px; text-decoration: none; color: inherit; }
+.logo-img { height: 70px; border-radius: 5px; }
+.logo-text { 
+    font-size: 1.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
+    -webkit-box-reflect: below -12px linear-gradient(transparent, rgba(255,255,255,0));
+}
+
+nav ul { display: flex; list-style: none; gap: 30px; }
+nav ul li a { text-decoration: none; color: #aaa; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; transition: 0.3s; }
+nav ul li a:hover { color: var(--primary); }
+
+section { padding: 100px 10%; border-bottom: 1px solid rgba(255,255,255,0.05); }
+h2 { font-size: 2.5rem; text-align: center; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 3px; color: var(--primary); }
+
+header { 
+    height: calc(100vh - 100px); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+}
+
+.ip-box { background: rgba(255,255,255,0.05); padding: 18px 35px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.3s; }
+.ip-box:hover { border-color: var(--primary); transform: scale(1.02); }
+
+.minihry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto; }
+.minihra-card { background: var(--card-bg); padding: 40px; border-radius: 20px; text-align: center; border: 1px solid rgba(0, 210, 255, 0.3); transition: 0.3s; }
+.minihra-card:hover { transform: translateY(-10px); border-color: var(--primary); }
+
+/* Nové styly pro příkazy */
+.commands-container { max-width: 800px; margin: 0 auto; background: var(--card-bg); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
+.command-row { display: flex; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding: 15px 25px; }
+.command-row:last-child { border-bottom: none; }
+.command-name { color: var(--primary); font-family: monospace; font-weight: bold; min-width: 150px; font-size: 1.1rem; }
+.command-desc { color: #ccc; }
+
+.rules-list { max-width: 800px; margin: 0 auto; }
+.rule-item { background: var(--card-bg); padding: 25px; border-radius: 15px; margin-bottom: 15px; display: flex; gap: 20px; align-items: center; border-left: 4px solid var(--primary); }
+.rule-num { font-size: 1.5rem; font-weight: 900; color: var(--primary); min-width: 45px; }
+
+#custom-alert { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--primary); color: #000; padding: 12px 25px; border-radius: 8px; font-weight: bold; z-index: 2000; transition: 0.5s; opacity: 0; }
+#custom-alert.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+footer { text-align: center; padding: 60px 20px; background: #000; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+@media (max-width: 768px) { 
+    nav { height: auto; flex-direction: column; padding: 20px; gap: 15px; } 
+    nav ul { gap: 10px; flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<nav>
+    <a href="index.html" class="nav-brand">
+        <img src="assets/images/logo.png" alt="Logo" class="logo-img">
+        <div class="logo-text">SirTros Minihry</div>
+    </a>
+    <ul>
+        <li><a href="#domu">Domů</a></li>
+        <li><a href="#pripojit">Připojit se</a></li>
+        <li><a href="#minihry">Minihry</a></li>
+        <li><a href="#pravidla">Pravidla</a></li>
+    </ul>
+</nav>
+
+<div id="custom-alert">IP ADRESA ZKOPÍROVÁNA!</div>
+
+<header id="domu">
+    <h1 style="font-size: clamp(2.5rem, 8vw, 5rem); margin-bottom: 10px;">SirTros Minihry</h1>
+    <p style="font-size: 1.1rem; margin-bottom: 35px; color: #aaa; max-width: 600px; padding: 0 20px;">
+        Vyzvi své kamarády a ukaž, kdo je nejlepší v našich minihrách!
+    </p>
+    
+    <div class="ip-box" onclick="copyIP()">
+        <span id="server-ip" style="font-family: 'Courier New', monospace; font-weight: bold; font-size: 1.2rem; color: var(--primary);"><strong>SirTros.aternos.me</strong></span>
+    </div>
+    <p style="margin-top: 15px; font-size: 0.8rem; color: #555; text-transform: uppercase;">Klikni pro kopii IP</p>
+</header>
+
+<section id="pripojit">
+    <h2>Jak se připojit</h2>
+    <div style="text-align: center; margin-bottom: 40px; color: #ccc;">
+        <p>Spusť Minecraft verzi <strong>1.21.11</strong> na Java edici, přidej si náš server a použij tyto příkazy:</p>
+    </div>
+    <div class="commands-container">
+        <div class="command-row">
+            <div class="command-name">/lobby</div>
+            <div class="command-desc">Vrátí tě zpět na hlavní výběr her.</div>
+        </div>
+        <div class="command-row">
+            <div class="command-name">/parkour</div>
+            <div class="command-desc">Rychle tě přenese k parkouru.</div>
+        </div>
+        <div class="command-row">
+            <div class="command-name">/duely</div>
+            <div class="command-desc">Rychle tě přenese k duelům.</div>
+        </div>
+        <div class="command-row">
+            <div class="command-name">/shazovacka</div>
+            <div class="command-desc">Rychle tě přenese k shazovačce.</div>
+        </div>
+        <div class="command-row">
+            <div class="command-name">/pravidla</div>
+            <div class="command-desc">Zobrazí pravidla v chatu.</div>
+        </div>
+    </div>
+</section>
+
+<section id="minihry">
+    <h2>Naše Minihry</h2>
+    <div class="minihry-grid">
+        <div class="minihra-card">
+            <h4><strong>Parkour</strong></h4>
+            <p>Zde se skáče parkour. Můžeš se učit nebo jen tak zaskákat.</p>
+        </div>
+        <div class="minihra-card">
+            <h4><strong>Duely</strong></h4>
+            <p>Hráči dostanou brnění a meče, bojuje se 1V1.</p>
+        </div>
+        <div class="minihra-card">
+            <h4><strong>Shazovačka</strong></h4>
+            <p>Hráči dostanou lopaty a cíl je podkopat všechny hráče, poslední hráč na <strong>platformě</strong> vyhrává.</p>
+        </div>
+    </div>
+</section>
+
+<section id="pravidla">
+    <h2>Pravidla Serveru</h2>
+    <div class="rules-list">
+        <div class="rule-item">
+            <div class="rule-num">01</div>
+            <div><strong>Fair Play:</strong> Zákaz cheatování, hackování a zneužívání chyb hry.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-num">02</div>
+            <div><strong>VoiceChat:</strong> Na serveru je povolen voicechat, ale platí v něm přísný zákaz vulgarit a urážení ostatních.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-num">03</div>
+            <div><strong>Respekt:</strong> Buďte k sobě slušní v chatu i v řeči. Žádný spam.</div>
+        </div>
+        <div class="rule-item">
+            <div class="rule-num">04</div>
+            <div><strong>A další:</strong> Respektujte pokyny adminů a neničte hru ostatním.</div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p><strong>&copy; 2024 SirTros Minihry. Užij si hru!</strong></p>
+</footer>
+
+<script>
+function copyIP() {
+    const ip = document.getElementById('server-ip').innerText;
+    navigator.clipboard.writeText(ip);
+    const alert = document.getElementById('custom-alert');
+    alert.classList.add('show');
+    setTimeout(() => alert.classList.remove('show'), 2000);
+}
+</script>
+
+</body>
+</html>
